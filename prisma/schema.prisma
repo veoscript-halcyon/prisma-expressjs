@@ -9,3 +9,42 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+model Dishes {
+  id                  String                  @id                      @default(cuid())
+  title               String                  @unique
+  image               String
+  category            String
+  location            String
+  description         String
+  author              String
+  youtubeUrl          String
+  ingredients         Ingredients[]
+  procedures          Procedures[]
+  createdAt           DateTime                @default(now())
+  updatedAt           DateTime                @default(now())
+}
+
+model Ingredients {
+  id                  String                  @id                       @default(cuid())
+  counter             Int                     @unique                   @default(autoincrement())   
+  name                String                  @unique
+  dish                Dishes                                            @relation(fields: [dishId], references: [id], onDelete: Cascade)
+  dishId              String
+  createdAt           DateTime                @default(now())
+  updatedAt           DateTime                @default(now())
+  
+  @@index([dishId])
+}
+
+model Procedures {
+  id                  String                  @id                       @default(cuid())
+  counter             Int                     @unique                   @default(autoincrement())   
+  description         String                  @unique
+  dish                Dishes                                            @relation(fields: [dishId], references: [id], onDelete: Cascade)
+  dishId              String
+  createdAt           DateTime                @default(now())
+  updatedAt           DateTime                @default(now())
+  
+  @@index([dishId])
+}
